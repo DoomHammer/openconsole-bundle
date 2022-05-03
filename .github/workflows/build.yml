@@ -1,0 +1,24 @@
+name: Build
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: Build
+      run: ./prepare_openconsole_package.sh
+    - uses: actions/upload-artifact@v3
+      name: Upload artifact
+      with:
+        name: openconsole-bundle.zip
+        path: openconsole-bundle.zip
+    - uses: svenstaro/upload-release-action@v2
+      name: Upload attachment to release
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: openconsole-bundle.zip
+        tag: ${{ github.ref }}
+        overwrite: true
